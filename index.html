@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Typing Practice</title>
+  <style>
+    body {
+      text-align: center;
+      margin: 0;
+      font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+      background-color: #fafafa;
+    }
+
+    h1 {
+      font-size: 64px;
+    }
+
+    #content {
+      max-width: 700px;
+      margin: 0 auto;
+      background: #eef;
+      padding: 10px;
+      border-bottom-left-radius: 5px;
+      border-bottom-right-radius: 5px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      border-bottom: solid 1px rgba(0, 0, 0, 0.1);
+      transition: background-color 100ms ease-in-out;
+    }
+
+    #input-box {
+      text-align: center;
+      font-size: 24px;
+      padding: 10px;
+    }
+
+    #submit-btn {
+      font-size: 24px;
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    #check {
+      font-size: 24px;
+      margin-top: 10px;
+    }
+
+    #word {
+      font-size: 100px;
+      transition: opacity 50ms ease-in-out;
+      opacity: 0;
+      margin: 20px;
+      font-family: Georgia, 'Times New Roman', Times, serif;
+    }
+
+    #scoreHolder {
+      font-size: 24px;
+    }
+
+    #bar {
+      margin: 0;
+      background-color: #222;
+      color: white;
+      font-size: 24px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+
+    #bar-content {
+      text-align: left;
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="bar">
+    <div id="bar-content">
+      <span>Typing Practice</span>
+    </div>
+  </div>
+  <div id="content">
+    <p id="word">Loading...</p>
+    <form onsubmit="checkInput(); return false;">
+      <input type="text" id="input-box" name="input-box" autocomplete="off">
+      <input type="submit" id="submit-btn" value="Submit">
+    </form>
+    <p id="scoreHolder">
+      Score: <span id="score">0</span> <br />
+      Streak: <span id="streak">0</span>
+    </p>
+    <p>
+      Type out the word seen above and press enter to confirm, try to see how many you can get correct!
+    </p>
+  </div>
+
+  <script>
+    let words = null;
+    let usedWords = [];
+    let word = null;
+    let score = 0;
+    let streak = 0;
+
+    const inputEl = document.getElementById("input-box");
+    const wordEl = document.getElementById("word");
+    const scoreEl = document.getElementById("score");
+    const streakEl = document.getElementById("streak");
+    const contentEl = document.getElementById("content");
+
+    // Load the JSON file
+    fetch("language_test.json")
+      .then(response => response.json())
+      .then(data => {
+        words = data.words;
+        // Display a random word
+        nextWord();
+      });
+
+    function nextWord() {
+      wordEl.style.opacity = 1;
+
+      // Choose a random word from the list, excluding words in usedWords array
+      const availableWords = words.filter(w => !usedWords.includes(w));
+      console.log(availableWords.length);
+
+      // Check if we have no words left
+      if (availableWords.length == 0) {
+        wordEl.textContent = "Completed!"
+        wordEl.style.color = "green";
+        return;
+      }
+
+      // Choose a random word & show it
+      word = availableWords[Math.floor(Math.random() * availableWords.length)];
+      usedWords.push(word);
+      wordEl.textContent = word;
+    }
+
+    function updateScore() {
+      scoreEl.textContent = score;
+      streakEl.textContent = streak;
+    }
+
+    function flashBackground(colour) {
+      contentEl.style.backgroundColor = colour;
+      setTimeout(function () {
+        contentEl.style.backgroundColor = "#eef";
+      }, 100);
+    }
+
+    function checkInput() {
+      let input = inputEl.value;
+      if (input === word) {
+        // Tag word as used so it doesn't come up again
+        usedWords.push(word);
+
+        // Update score & streaks
+        score++;
+        streak++;
+        updateScore();
+
+        // Transition to pass style
+        wordEl.style.opacity = 0;
+        inputEl.value = "";
+        flashBackground("#efe");
+
+        // Wait and display next word (or end the game)
+        setTimeout(function () {
+          nextWord();
+        }, 100);
+      } else {
+        // Reset streak
+        streak = 0;
+        updateScore();
+
+        // Transition to fail style
+        flashBackground("#fee");
+
+        // Clear the input box
+        inputEl.value = "";
+      }
+    }
+
+  </script>
+</body>
+
+</html>
