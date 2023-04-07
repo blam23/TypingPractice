@@ -59,13 +59,12 @@
     #correct {
       color: #4CAF50;
       transition: transform 100ms ease-in-out, text-shadow 100ms ease-in-out, color 100ms ease-in-out;
-      display: inline-block;
     }
 
     .pulse {
-      transform: scale(120%);
-      text-shadow: 0 10px 10px rgba(0, 0, 0, 0.5);
-      color: #68cb6b;
+      /*transform: scale(120%);
+      text-shadow: 0 10px 10px rgba(0, 0, 0, 0.5);*/
+      color: #9edea1;
     }
 
     #scoreHolder {
@@ -96,7 +95,7 @@
     </div>
   </div>
   <div id="content">
-    <p id="word"><span id="incomplete">Loading...</span>&zwj;<span id="correct"></span></p>
+    <p id="word"><span id="correct"></span><span id="incomplete"></span></p>
     <p id="scoreHolder">
       Round: <span id="score">0</span> <br />
       Streak: <span id="streak">0</span>
@@ -140,11 +139,11 @@
     });
 
     function handleKeyDown(e) {
-      var text = incompleteEl.textContent.substring(1);
+      var text = incompleteEl.textContent;
       var letter = text.charAt(0);
       console.log(e.key, letter, e.key == letter)
-      if (e.key == letter) {
-        incompleteEl.innerHTML = "&#x200d;" + text.substring(1);
+      if (e.key != letter) {
+        incompleteEl.textContent = text.substring(1);
         correctEl.textContent = correctEl.textContent + letter;
 
         correctEl.className = "pulse";
@@ -167,7 +166,7 @@
 
     function nextWord() {
       // Reset correct letter content
-      correctEl.innerHTML = "&#x200d;";
+      correctEl.innerText = "";
 
       wordPos = 0;
       wordEl.style.opacity = 1;
@@ -189,7 +188,7 @@
       // Choose a random word & show it
       word = availableWords[Math.floor(Math.random() * availableWords.length)];
       usedWords.push(word);
-      incompleteEl.innerHTML = "&#x200d;" + word;
+      incompleteEl.innerText = word;
     }
 
     function updateScore() {
