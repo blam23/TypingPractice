@@ -49,7 +49,7 @@
 
     #word {
       font-size: 100px;
-      transition: opacity 50ms ease-in-out;
+      transition: opacity 100ms ease-in-out;
       opacity: 0;
       margin: 20px;
       font-family: Georgia, 'Times New Roman', Times, serif;
@@ -164,6 +164,9 @@
     }
 
     function nextWord() {
+      // Reset correct letter content
+      correctEl.textContent = "";
+
       wordPos = 0;
       wordEl.style.opacity = 1;
 
@@ -192,19 +195,18 @@
       streakEl.textContent = streak + " (highest " + highestStreak + ")";
     }
 
-    function flashBackground(colour) {
+    function flashBackground(colour, timeout = 100) {
       contentEl.style.backgroundColor = colour;
       setTimeout(function () {
         contentEl.style.backgroundColor = "#eef";
-      }, 100);
+      }, timeout);
     }
 
     function checkInput() {
       let input = correctEl.textContent;
       console.log(input)
       if (input === word) {
-        // Reset correct letter content
-        correctEl.textContent = "";
+
 
         // Tag word as used so it doesn't come up again
         usedWords.push(word);
@@ -220,13 +222,15 @@
         updateScore();
 
         // Transition to pass style
-        wordEl.style.opacity = 0;
-        flashBackground("#efe");
+        flashBackground("#efe", 1000);
 
         // Wait and display next word (or end the game)
         setTimeout(function () {
-          nextWord();
-        }, 100);
+          wordEl.style.opacity = 0;
+          setTimeout(function () {
+            nextWord();
+          }, 200);
+        }, 1000);
       }
     }
 
