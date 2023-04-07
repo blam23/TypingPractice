@@ -114,6 +114,8 @@
     let streak = 0;
     let highestStreak = 0;
 
+    let nextWordTimeoutMS = 400;
+
     const inputEl = document.getElementById("input-box");
     const wordEl = document.getElementById("word");
     const correctEl = document.getElementById("correct");
@@ -222,7 +224,7 @@
         updateScore();
 
         // Transition to pass style
-        flashBackground("#efe", 1000);
+        flashBackground("#efe", nextWordTimeoutMS);
 
         // Wait and display next word (or end the game)
         setTimeout(function () {
@@ -230,7 +232,7 @@
           setTimeout(function () {
             nextWord();
           }, 200);
-        }, 1000);
+        }, nextWordTimeoutMS);
       }
     }
 
