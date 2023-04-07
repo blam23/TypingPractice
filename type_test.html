@@ -140,9 +140,12 @@
     });
 
     function handleKeyDown(e) {
+      if (e.key == "Enter" || e.shiftKey || e.ctrlKey || e.metaKey || e.altKey || e.which == 8) {
+        return;
+      }
+
       var text = incompleteEl.textContent.substring(1);
       var letter = text.charAt(0);
-      console.log(e.key, letter, e.key == letter, text.length)
       if (e.key == letter) {
         incompleteEl.innerHTML = "&#x200d;" + text.substring(1);
         correctEl.textContent = correctEl.textContent + letter;
@@ -174,7 +177,6 @@
 
       // Choose a random word from the list, excluding words in usedWords array
       const availableWords = words.filter(w => !usedWords.includes(w));
-      console.log(availableWords.length);
 
       // Check if we have no words left
       if (availableWords.length == 0) {
