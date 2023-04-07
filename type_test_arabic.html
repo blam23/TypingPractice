@@ -142,7 +142,7 @@
       var text = incompleteEl.textContent;
       var letter = text.charAt(0);
       console.log(e.key, letter, e.key == letter)
-      if (e.key != letter) {
+      if (e.key == letter) {
         incompleteEl.textContent = text.substring(1);
         correctEl.textContent = correctEl.textContent + letter;
 
